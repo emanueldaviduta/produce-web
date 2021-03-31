@@ -2,7 +2,7 @@
 	<div class="product" @click="onProductClick(product.id)">
 		<!-- <img :src="'/img/' + product.img + '.jpg'" :alt="`${product.name}`" /> -->
 		<!-- <img :src="require(`../assets/${product.img}.jpg`)" :alt="`${product.name}`" /> -->
-		<div class='centred-text'> {{product.name}} </div>
+		<div class='centred-text'>{{product.id}} - {{product.name}} </div>
 	</div>
 </template>
 
@@ -22,16 +22,16 @@ export default {
 <style scoped>
 .product{
 	position: relative;
-	height: 200px;
+	/* height: 200px;
 	width: 200px;
 	margin-bottom: 5px;
-	margin-top: 5px;
+	margin-top: 5px; */
 }
 .centred-text{
-  position: absolute;
+  /* position: absolute; 
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  left: 50%;*/
+  /* transform: translate(-50%, -50%); */
   cursor: pointer;
   
   color: black;

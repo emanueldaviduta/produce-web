@@ -1,5 +1,5 @@
 
-import Intro from '../components/Intro'
+import Nutrition from '../components/Nutrition'
 import Login from '../components/Login'
 import Router from 'vue-router'
 
@@ -9,7 +9,7 @@ let router = new Router({
     {
       path: '/home',
       name: 'Home',
-      component: Intro,
+      component: Nutrition,
       meta:{
         requiresAuth:true
       }

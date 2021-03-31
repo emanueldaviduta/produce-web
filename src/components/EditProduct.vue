@@ -1,27 +1,24 @@
 <template>
   <form @submit.prevent="handleSubmit">
       <label>Id:</label>
-	  <input type="number" required v-model="id">
+	  <input type="number" required v-model="id" readonly>
 	  
 	  <label>Name:</label>
-	  <input type="text" required v-model="name">
-	  
-	  <label>Description:</label>
-	  <input type="text" required v-model="description">
+	  <input type="text" required v-model="name" :readonly="false">
 	  
 	  <label>Type:</label>
-	  <select required v-model="type">
+	  <select required v-model="categoryId" :disabled="false">
 		  <option value="1"> Vegetable</option>
 		  <option value="2"> Fruit</option>
 	  </select>
 	  
 	  <label>Image:</label>
-	  <input type="text" required v-model="img">
+	  <input type="text" v-model="img" :readonly="false">
 	  
 		<div id='product-edit-buttons'>
 			<div>
 				<button class="product-edit-btn">Save</button>
-				<button class="product-edit-btn" @click.prevent="cancel()">Cancel</button>
+				<button class="product-edit-btn" @click.prevent="remove()">Remove</button>
 			</div>
 		</div>
   </form>
@@ -38,11 +35,7 @@ export default {
 			type: String,
 			default: ''
 		},
-		description: {
-			type: String,
-			default: ''
-		},
-		type: {
+		categoryId: {
 			type: Number,
 			default: 1,
 		},
@@ -53,10 +46,10 @@ export default {
 	},
 	methods: {
 		handleSubmit() {
-			this.$emit('save-product',{id: this.id, name: this.name, description: this.description, type: this.type, img: this.img });
+			this.$emit('save-product',{id: this.id, name: this.name, categoryId: this.categoryId, img: this.img });
 		},
-		cancel() {
-			this.$emit('cancel-edit');
+		remove() {
+			this.$emit('remove');
 		}
 	}
 
@@ -97,15 +90,14 @@ input, select {
 }
 
 .product-edit-btn {
-	font-size: 40px;
-	width: 45%;
-	background: #000;
-	color: #fff;
-	border: none;
-	margin: 0px 5% 5px 0px;
-	border-radius: 5px;
-	cursor: pointer;
-	text-decoration: none;
-	font-family: inherit;
+	font-size: 14px;
+    background: #a2a2a2;
+    color: #fff;
+    border: none;
+    margin: 5px;
+    padding: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: inherit;
 }
 </style>

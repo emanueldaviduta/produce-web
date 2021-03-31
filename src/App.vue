@@ -54,7 +54,7 @@ body {
 }
 
 .container {
-  border-radius: 5px;
+  /* border-radius: 5px; */
 }
 .navbar-box {
   display: flex;
