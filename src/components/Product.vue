@@ -1,7 +1,7 @@
 <template>
 	<div class="product" @click="onProductClick(product.id)">
 		<!-- <img :src="'/img/' + product.img + '.jpg'" :alt="`${product.name}`" /> -->
-		<img :src="require(`../assets/${product.img}.jpg`)" :alt="`${product.name}`" />
+		<!-- <img :src="require(`../assets/${product.img}.jpg`)" :alt="`${product.name}`" /> -->
 		<div class='centred-text'> {{product.name}} </div>
 	</div>
 </template>
@@ -20,7 +20,6 @@ export default {
 </script>
 
 <style scoped>
-
 .product{
 	position: relative;
 	height: 200px;
@@ -33,8 +32,9 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  cursor: pointer;
   
-  color: white;
+  color: black;
     font-size: 30px;
 	font-family: inherit;
 	font-weight: bold;
