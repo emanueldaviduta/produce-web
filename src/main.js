@@ -1,6 +1,5 @@
 import {createApp } from 'vue'
 import App from './App.vue'
-import router from './router/router'
 
 import firebase from 'firebase/app';
 
@@ -18,12 +17,12 @@ createApp(App).mount('#app');
 // let app;
 // firebase.auth().onAuthStateChanged((user) => {
 //     if (!app) {
-        // app = new Vue({
-        //     el: '#app',
-        //     router: router,
-        //     components: { App },
-        //     template: '<App/>'
-        // })
+//         app = new Vue({
+//             el: '#app',
+//             router: router,
+//             components: { App },
+//             template: '<App/>'
+//         })
 //     }
 // });
 

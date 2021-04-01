@@ -126,18 +126,18 @@ export default defineComponent({
       Array.prototype.forEach.call(elements, function (element) {
         if (element.classList.contains("name-btn")) {
           element.addEventListener("click", function () {
-            console.log(this.dataset.id + " name-btn click!!");
+            // console.log(this.dataset.id + " name-btn click!!");
           });
         }
         if (element.classList.contains("quick-btn")) {
           element.addEventListener("click", function () {
-            console.log(this.dataset.id + " quick-btn click!!");
+            // console.log(this.dataset.id + " quick-btn click!!");
           });
         }
       });
     };
     const updateCheckedRows = (rowsKey) => {
-      console.log(rowsKey);
+      // console.log(rowsKey);
     };
     return {
       table,
