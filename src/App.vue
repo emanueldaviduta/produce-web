@@ -4,12 +4,15 @@
       <img src="./assets/logo.png" />
       <ul class="navbar">
         <li>First Page</li>
-        <li>Administration</li>
-        <li>About</li>
+        <li>Produce</li>
+        <li>Vitamins</li>
         <li @click="logout">Logout</li>
       </ul>
     </div>
     <Nutrition />
+    <hr>
+    <Vitamins />
+    <hr>
     <Table />
   </div>
   <div v-if="false" class="container">
@@ -20,6 +23,7 @@
 <script>
 import Nutrition from "./components/Nutrition";
 import Table from "./components/Table";
+import Vitamins from "./components/Vitamins";
 import Login from "./components/Login";
 import { authUser } from "./components/Login";
 
@@ -27,6 +31,8 @@ export default {
   name: "App",
   components: {
     Nutrition,
+    //Table,
+    Vitamins,
     Login,
   },
   methods: {
@@ -61,6 +67,11 @@ body {
   justify-content: space-between;
   padding-bottom: 5px;
   border-bottom: 1px solid #ccc;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  background-color: white;
+  z-index: 1500;
 }
 .navbar-box img {
   width: 65px;
@@ -71,7 +82,7 @@ body {
 }
 .navbar li {
   padding: 10px 5px;
-    margin: 10px 5px;
+  margin: 10px 5px;
   list-style-type: none;
   cursor: pointer;
 }

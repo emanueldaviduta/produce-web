@@ -19,12 +19,10 @@
         + Add product
       </button>
       <EditProduct
+        v-if="selectedProduct"
         @remove="deleteProduct"
         @save-product="save"
-        :id="selectedProduct ? selectedProduct.id : undefined"
-        :name="selectedProduct ? selectedProduct.name : undefined"
-        :categoryId="selectedProduct ? selectedProduct.categoryId : undefined"
-        :img="selectedProduct ? selectedProduct.img : undefined"
+        :produce="selectedProduct"
       />
     </div>
   </div>
@@ -52,6 +50,7 @@ export default {
       this.selectedProduct = this.products.find((p) => p.id === id);
     },
     save(product) {
+      console.log(product.vitamins);
       db.collection("Produce")
         .doc(product.id.toString())
         .set({ categoryId: product.categoryId, name: product.name })
@@ -66,7 +65,12 @@ export default {
         .then(() => this.initProducts());
     },
     addProduct() {
-      const maxId = Math.max.apply(Math, this.dumpData.map(function(o) { return o.id; }))
+      const maxId = Math.max.apply(
+        Math,
+        this.dumpData.map(function (o) {
+          return o.id;
+        })
+      );
       this.selectedProduct = { id: maxId + 1 };
     },
     initProducts() {
@@ -84,6 +88,24 @@ export default {
           });
           this.dumpData = arr;
           this.products = arr;
+          this.initProduceVitamins();
+        });
+    },
+    initProduceVitamins() {
+      db.collection("ProduceVitamins")
+        .get()
+        .then((qs) => {
+          const arr = [];
+          qs.forEach((rt) => {
+            arr.push({
+              vitaminId: rt.data().vitaminId,
+              produceId: rt.data().produceId,
+            });
+          });
+          this.dumpData.forEach((it) => {
+            it.vitamins = arr.filter((x) => x.produceId === it.id);
+          });
+          this.products = this.dumpData;
         });
     },
   },
@@ -103,18 +125,18 @@ export default {
 <style scoped>
 #nutrition {
   display: flex;
-  height: calc(100vh - 71px);
+  height: 100vh;
+  margin-top: 71px;
 }
 #vegetables {
   width: 60%;
   overflow: auto;
   border-right: 1px solid #ccc;
 }
-/* #vegetables #product-type-navbar,
-#product-description-buttons {
-  overflow: hidden;
+#product-type-navbar,
+#product-description-container {
   text-align: center;
-} */
+}
 
 .product-type-btn {
   font-size: 16px;
@@ -132,13 +154,6 @@ export default {
 .hide-btn {
   visibility: hidden;
 }
-
-/* #product-list {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  justify-content: space-around;
-} */
 
 #product-description-container {
   width: 40%;
