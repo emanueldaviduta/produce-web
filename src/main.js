@@ -1,5 +1,6 @@
 import {createApp } from 'vue'
 import App from './App.vue'
+import router from './router';
 
 import firebase from 'firebase/app';
 
@@ -12,7 +13,7 @@ firebase.initializeApp({
     messagingSenderId: '827356207352'
 });
 export const db = firebase.firestore();
-createApp(App).mount('#app');
+createApp(App).use(router).mount('#app');
 
 // let app;
 // firebase.auth().onAuthStateChanged((user) => {
