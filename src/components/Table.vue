@@ -1,6 +1,6 @@
 <template>
-  <vue-table-lite
-    :shas-checkbox="true"
+  <table-lite
+    :has-checkbox="true"
     :is-loading="table.isLoading"
     :is-re-search="table.isReSearch"
     :columns="table.columns"
@@ -10,15 +10,43 @@
     :messages="table.messages"
     @do-search="doSearch"
     @is-finished="tableLoadingFinish"
-    @return-checked-row="updateCheckedRows"
-  />
+    @return-checked-rows="updateCheckedRows"
+  ></table-lite>
 </template>
 
 <script>
-import VueTableLite from "vue3-table-lite";
-export default {
-  created() {
-    table = reactive({
+import { defineComponent, reactive } from "vue";
+import TableLite from "vue3-table-lite";
+const sampleData1 = (offst, limit) => {
+  offst = offst + 1;
+  let data = [];
+  for (let i = offst; i <= limit; i++) {
+    data.push({
+      id: i,
+      name: "TEST" + i,
+      email: "test" + i + "@example.com",
+    });
+  }
+  return data;
+};
+const sampleData2 = (offst, limit) => {
+  let data = [];
+  for (let i = limit; i > offst; i--) {
+    data.push({
+      id: i,
+      name: "TEST" + i,
+      email: "test" + i + "@example.com",
+    });
+  }
+  return data;
+};
+export default defineComponent({
+  name: "App",
+  components: {
+    TableLite,
+  },
+  setup() {
+    const table = reactive({
       isLoading: false,
       isReSearch: false,
       columns: [
@@ -63,17 +91,8 @@ export default {
           },
         },
       ],
-      rows: [
-        {
-          id: 1,
-          name: "TEST1",
-        },
-        {
-          id: 2,
-          name: "TEST2",
-        },
-      ],
-      totalRecordCount: 2,
+      rows: sampleData1(0, 10),
+      totalRecordCount: 20,
       sortable: {
         order: "id",
         sort: "asc",
@@ -85,7 +104,48 @@ export default {
         noDataAvailable: "No data",
       },
     });
+    const doSearch = (offset, limit, order, sort) => {
+      table.isLoading = true;
+      setTimeout(() => {
+        table.isReSearch = offset == undefined ? true : false;
+        if (offset >= 10 || limit >= 20) {
+          limit = 20;
+        }
+        if (sort == "asc") {
+          table.rows = sampleData1(offset, limit);
+        } else {
+          table.rows = sampleData2(offset, limit);
+        }
+        table.totalRecordCount = 20;
+        table.sortable.order = order;
+        table.sortable.sort = sort;
+      }, 600);
+    };
+    const tableLoadingFinish = (elements) => {
+      table.isLoading = false;
+      Array.prototype.forEach.call(elements, function (element) {
+        if (element.classList.contains("name-btn")) {
+          element.addEventListener("click", function () {
+            console.log(this.dataset.id + " name-btn click!!");
+          });
+        }
+        if (element.classList.contains("quick-btn")) {
+          element.addEventListener("click", function () {
+            console.log(this.dataset.id + " quick-btn click!!");
+          });
+        }
+      });
+    };
+    const updateCheckedRows = (rowsKey) => {
+      console.log(rowsKey);
+    };
+    return {
+      table,
+      doSearch,
+      tableLoadingFinish,
+      updateCheckedRows,
+    };
   },
-};
+});
 </script>
 

@@ -31,7 +31,7 @@ export default {
   name: "App",
   components: {
     Nutrition,
-    //Table,
+    Table,
     Vitamins,
     Login,
   },
