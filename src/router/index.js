@@ -8,8 +8,8 @@ import "firebase/auth";
 const routes = [
   {
     path: '/',
-    redirect: 'login',
-    component: Login
+    redirect: 'home',
+    component: Home
   }, {
     path: '/home',
     name: 'Home',
@@ -29,7 +29,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to,from,next)=>{
-  console.log(firebase.auth());
     let currentUser=firebase.auth().currentUser;
     let requiresAuth=to.matched.some(record=>record.meta.requiresAuth);
 
@@ -39,27 +38,6 @@ router.beforeEach((to,from,next)=>{
   });
 
 export default router
-// let router = new Router({
-//   routes: [
-//     {
-//       path: '/home',
-//       name: 'Home',
-//       component: Home,
-//       meta:{
-//         requiresAuth: true
-//       }
-//     },
-//     {
-//       path: '/login',
-//       name: 'Login',
-//       component: Login
-//     },
-//     {
-//       path: '*',
-//       redirect: '/login',
-//     }
-//   ]
-// });
 
 
 

@@ -3,14 +3,10 @@
 </template>
 
 <script>
-import Home from "./views/Home";
-import Login from "./views/Login";
 
 export default {
   name: "App",
   components: {
-    Login,
-    Home
   },
 };
 </script>

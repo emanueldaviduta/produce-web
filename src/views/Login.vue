@@ -43,6 +43,7 @@ export default {
         .signInWithEmailAndPassword(this.email, this.password)
         .then((userCredential) => {
           this.authUser = userCredential.user;
+          this.$router.push('/home');
         })
         .catch((error) => {
           this.errorMsg = error.message;
