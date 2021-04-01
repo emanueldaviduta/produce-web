@@ -67,7 +67,7 @@ body {
   justify-content: space-between;
   padding-bottom: 5px;
   border-bottom: 1px solid #ccc;
-  width: 100vw;
+  width: 100%;
   position: fixed;
   top: 0;
   background-color: white;

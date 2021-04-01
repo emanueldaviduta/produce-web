@@ -11,12 +11,14 @@
         </button>
       </div>
       <div id="product-list">
+        <p>Produce list</p>
+        <hr />
         <Products @product-clicked="productClicked" :products="products" />
       </div>
     </div>
     <div id="product-description-container">
       <button class="product-type-btn" @click="addProduct()">
-        + Add product
+        + Add produce
       </button>
       <EditProduct
         v-if="selectedProduct"
@@ -78,7 +80,13 @@ export default {
         });
     },
     addProduct() {
-      const maxId = this.dumpData.length > 0 ? Math.max.apply(Math, this.dumpData.map((o) =>  o.id)) : 0;
+      const maxId =
+        this.dumpData.length > 0
+          ? Math.max.apply(
+              Math,
+              this.dumpData.map((o) => o.id)
+            )
+          : 0;
       this.selectedProduct = { id: maxId + 1, vitamins: [] };
     },
     addProduceDifference(product) {
@@ -107,8 +115,9 @@ export default {
       }
     },
     showInfo(msg) {
+      this.messageInfo = msg;
       setTimeout(() => {
-        this.messageInfo = msg;
+        this.messageInfo = null;
       }, 3000);
     },
     initProducts() {
@@ -124,8 +133,9 @@ export default {
           });
           this.dumpData = arr;
           this.products = arr;
-          
-          this.selectedProduct = this.products[0];
+          if (Object.keys(this.selectedProduct) == 0) {
+            this.selectedProduct = this.products[0];
+          }
           this.initProduceVitamins();
         });
     },
@@ -172,7 +182,7 @@ export default {
     return {
       products: [],
       dumpData: [],
-      selectedProduct: Object,
+      selectedProduct: {},
       vitaminsClone: [],
       messageInfo: null,
     };
@@ -194,9 +204,18 @@ export default {
   overflow: auto;
   border-right: 1px solid #ccc;
 }
-#product-type-navbar,
+#product-type-navbar{
+  text-align: center;
+}
 #product-description-container {
   text-align: center;
+  height: 100%;
+  overflow: auto;
+}
+#product-list {
+  margin: 20px;
+  height: calc(100% - 115px);
+  overflow: auto;
 }
 
 .product-type-btn {
