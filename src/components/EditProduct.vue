@@ -1,22 +1,7 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <label class="form-label">Id:</label>
-    <input
-      class="form-input"
-      type="number"
-      required
-      v-model="produce.id"
-      readonly
-    />
-
     <label class="form-label">Name:</label>
-    <input
-      class="form-input"
-      type="text"
-      required
-      v-model="produce.name"
-      :readonly="false"
-    />
+    <input class="form-input" type="text" required v-model="produce.name" />
 
     <label class="form-label">Type:</label>
     <select
@@ -42,10 +27,36 @@
           name="vitamin.name"
           :value="vitamin.id"
           v-model="produce.vitamins"
-          @change="checkVitamin($event)"
         />
         <label for="vitamin.id">{{ vitamin.name }}</label
         ><br />
+      </div>
+    </div>
+
+    <div>
+      <div class="input-half">
+        <label class="form-label">Calories:</label>
+        <input class="form-input" type="number" v-model="produce.calories" />
+      </div>
+
+      <div class="input-half">
+        <label class="form-label">Proteins:</label>
+        <input class="form-input" type="number" v-model="produce.proteins" />
+      </div>
+
+      <div class="input-half">
+        <label class="form-label">Lipid:</label>
+        <input class="form-input" type="number" v-model="produce.lipid" />
+      </div>
+
+      <div class="input-half">
+        <label class="form-label">Carbohydrat:</label>
+        <input class="form-input" type="number" v-model="produce.carbohydrat" />
+      </div>
+
+      <div class="input-half">
+        <label class="form-label">Fiber:</label>
+        <input class="form-input" type="number" v-model="produce.fiber" />
       </div>
     </div>
 
@@ -65,22 +76,15 @@ import { db } from "../main";
 export default {
   props: {
     produce: {
-      id: {
-        type: Number,
-        default: 0,
-      },
-      name: {
-        type: String,
-        default: "",
-      },
-      categoryId: {
-        type: Number,
-        default: 1,
-      },
-      vitamins: {
-        type: String,
-        default: "",
-      },
+      id: 0,
+      name: "",
+      categoryId: 0,
+      vitamins: [],
+      calories: 0,
+      proteins: 0,
+      lipid: 0,
+      carbohydrat: 0,
+      fiber: 0,
     },
   },
   methods: {
@@ -89,14 +93,6 @@ export default {
     },
     remove() {
       this.$emit("remove");
-    },
-    checkVitamin(ev, id) {
-      console.log(this.produce.vitamins);
-      // 	  if (ev.currentTarget) {
-      //     this.produce.vitamins.push(id);
-      //   } else {
-      //     this.produce.vitamins = this.produce.vitamins.filter((x) => x != id);
-      //   }
     },
     initVitamins() {
       db.collection("Vitamins")
@@ -123,10 +119,10 @@ export default {
 <style>
 form {
   max-width: 420px;
-  margin: 30px auto;
+  margin: 0px auto 30px;
   background: white;
   text-align: left;
-  padding: 40px;
+  padding: 0 40px;
   border-radius: 10px;
 }
 .form-label {
@@ -154,6 +150,11 @@ form {
 }
 .vitamin-row input {
   margin: 5px;
+}
+.input-half {
+  width: 50%;
+  display: inline-block;
+  padding-right: 20px;
 }
 
 #product-edit-buttons {

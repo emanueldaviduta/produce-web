@@ -24,6 +24,7 @@
         @save-product="save"
         :produce="selectedProduct"
       />
+      <p v-if="messageInfo != undefined">{{ messageInfo }}</p>
     </div>
   </div>
 </template>
@@ -48,30 +49,67 @@ export default {
     },
     productClicked(id) {
       this.selectedProduct = this.products.find((p) => p.id === id);
+      this.vitaminsClone = this.selectedProduct.vitaminsDetails;
     },
     save(product) {
-      console.log(product.vitamins);
+      // verify vitamins
+      this.removeProduceDifference(product);
+      this.addProduceDifference(product);
+      // update produce
       db.collection("Produce")
         .doc(product.id.toString())
-        .set({ categoryId: product.categoryId, name: product.name })
+        .set(product)
         .then(() => {
           this.initProducts();
+          this.showInfo("Produce updated");
+        })
+        .catch((error) => {
+          this.messageInfo = error.message;
         });
     },
     deleteProduct() {
       db.collection("Produce")
         .doc(this.selectedProduct.id.toString())
         .delete()
-        .then(() => this.initProducts());
+        .then(() => {
+          this.initProducts();
+          this.showInfo("Produce deleted");
+          this.selectedProduct = {};
+        });
     },
     addProduct() {
-      const maxId = Math.max.apply(
-        Math,
-        this.dumpData.map(function (o) {
-          return o.id;
-        })
+      const maxId = this.dumpData.length > 0 ? Math.max.apply(Math, this.dumpData.map((o) =>  o.id)) : 0;
+      this.selectedProduct = { id: maxId + 1, vitamins: [] };
+    },
+    addProduceDifference(product) {
+      const dff = this.arr_diff(
+        this.vitaminsClone.map((x) => x.vitaminId),
+        product.vitamins
       );
-      this.selectedProduct = { id: maxId + 1 };
+      if (dff && dff.length > 0) {
+        dff.forEach((item) => {
+          db.collection("ProduceVitamins").add({
+            produceId: parseInt(product.id, 10),
+            vitaminId: parseInt(item, 10),
+          });
+        });
+      }
+    },
+    removeProduceDifference(product) {
+      const toDelete = this.vitaminsClone.filter(
+        (x) => product.vitamins.indexOf(x.vitaminId) == -1
+      );
+      if (toDelete && toDelete.length > 0) {
+        toDelete.forEach((element) => {
+          db.collection("ProduceVitamins").doc(element.id).delete();
+          this.vitaminsClone.splice(this.vitaminsClone.indexOf(element), 1);
+        });
+      }
+    },
+    showInfo(msg) {
+      setTimeout(() => {
+        this.messageInfo = msg;
+      }, 3000);
     },
     initProducts() {
       // Product  1 -> vegetable; 2 -> fruit
@@ -80,14 +118,14 @@ export default {
         .then((querySnapshot) => {
           const arr = [];
           querySnapshot.forEach((doc) => {
-            arr.push({
-              id: doc.id,
-              name: doc.data().name,
-              categoryId: doc.data().categoryId,
-            });
+            const obj = doc.data();
+            obj.id = doc.id;
+            arr.push(obj);
           });
           this.dumpData = arr;
           this.products = arr;
+          
+          this.selectedProduct = this.products[0];
           this.initProduceVitamins();
         });
     },
@@ -98,15 +136,36 @@ export default {
           const arr = [];
           qs.forEach((rt) => {
             arr.push({
+              id: rt.id,
               vitaminId: rt.data().vitaminId,
               produceId: rt.data().produceId,
             });
           });
           this.dumpData.forEach((it) => {
-            it.vitamins = arr.filter((x) => x.produceId === it.id);
+            const std = arr.filter((x) => x.produceId === parseInt(it.id, 10));
+            it.vitaminsDetails = std;
+            it.vitamins = std.map((d) => d.vitaminId);
           });
           this.products = this.dumpData;
         });
+    },
+    arr_diff(a1, a2) {
+      var a = [],
+        diff = [];
+      for (var i = 0; i < a1.length; i++) {
+        a[a1[i]] = true;
+      }
+      for (var i = 0; i < a2.length; i++) {
+        if (a[a2[i]]) {
+          delete a[a2[i]];
+        } else {
+          a[a2[i]] = true;
+        }
+      }
+      for (var k in a) {
+        diff.push(k);
+      }
+      return diff;
     },
   },
   data() {
@@ -114,6 +173,8 @@ export default {
       products: [],
       dumpData: [],
       selectedProduct: Object,
+      vitaminsClone: [],
+      messageInfo: null,
     };
   },
   created() {
