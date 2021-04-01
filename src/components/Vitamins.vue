@@ -90,6 +90,7 @@ export default {
   padding: 15px;
   height: 100%;
   overflow: auto;
+  text-align: center;
 }
 .produce-list {
   width: 70%;
