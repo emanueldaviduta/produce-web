@@ -78,7 +78,13 @@ export default {
         });
     },
     addProduct() {
-      const maxId = this.dumpData.length > 0 ? Math.max.apply(Math, this.dumpData.map((o) =>  o.id)) : 0;
+      const maxId =
+        this.dumpData.length > 0
+          ? Math.max.apply(
+              Math,
+              this.dumpData.map((o) => o.id)
+            )
+          : 0;
       this.selectedProduct = { id: maxId + 1, vitamins: [] };
     },
     addProduceDifference(product) {
@@ -107,8 +113,9 @@ export default {
       }
     },
     showInfo(msg) {
+      this.messageInfo = msg;
       setTimeout(() => {
-        this.messageInfo = msg;
+        this.messageInfo = null;
       }, 3000);
     },
     initProducts() {
@@ -124,8 +131,9 @@ export default {
           });
           this.dumpData = arr;
           this.products = arr;
-          
-          this.selectedProduct = this.products[0];
+          if (Object.keys(this.selectedProduct) == 0) {
+            this.selectedProduct = this.products[0];
+          }
           this.initProduceVitamins();
         });
     },
@@ -172,7 +180,7 @@ export default {
     return {
       products: [],
       dumpData: [],
-      selectedProduct: Object,
+      selectedProduct: {},
       vitaminsClone: [],
       messageInfo: null,
     };
