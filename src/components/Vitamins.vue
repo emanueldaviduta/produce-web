@@ -88,6 +88,8 @@ export default {
   width: 30%;
   border-right: 1px solid #ccc;
   padding: 15px;
+  height: 100%;
+  overflow: auto;
 }
 .produce-list {
   width: 70%;

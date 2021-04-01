@@ -11,12 +11,14 @@
         </button>
       </div>
       <div id="product-list">
+        <p>Produce list</p>
+        <hr />
         <Products @product-clicked="productClicked" :products="products" />
       </div>
     </div>
     <div id="product-description-container">
       <button class="product-type-btn" @click="addProduct()">
-        + Add product
+        + Add produce
       </button>
       <EditProduct
         v-if="selectedProduct"
@@ -202,9 +204,18 @@ export default {
   overflow: auto;
   border-right: 1px solid #ccc;
 }
-#product-type-navbar,
+#product-type-navbar{
+  text-align: center;
+}
 #product-description-container {
   text-align: center;
+  height: 100%;
+  overflow: auto;
+}
+#product-list {
+  margin: 20px;
+  height: calc(100% - 115px);
+  overflow: auto;
 }
 
 .product-type-btn {
