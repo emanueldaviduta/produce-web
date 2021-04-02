@@ -2,17 +2,24 @@
   <div class="navbar-box">
     <img src="../assets/logo.png" />
     <ul class="navbar">
-      <li>First Page</li>
-      <li>Produce</li>
-      <li>Vitamins</li>
+      <!-- <li @click="goTo(1)">First Page</li> -->
+      <li @click="goTo(2)">Produce</li>
+      <li @click="goTo(3)">Vitamins</li>
+      <li @click="goTo(4)">Table</li>
       <li @click="logout">Logout</li>
     </ul>
   </div>
-  <Nutrition />
+  <div id="sect2">
+    <Nutrition />
+  </div>
   <hr />
-  <Vitamins />
+  <div id="sect3">
+    <Vitamins />
+  </div>
   <hr />
-  <Table />
+  <div id="sect4">
+    <Table />
+  </div>
 </template>
 <script>
 import Nutrition from "../components/Nutrition";
@@ -26,17 +33,24 @@ export default {
   components: {
     Nutrition,
     Table,
-    Vitamins
+    Vitamins,
   },
   methods: {
+    goTo(ind) {
+      const myElement = document.getElementById("sect" + ind);
+      const topPos = myElement.offsetTop;
+      document.body.scrollTop = topPos;
+      document.documentElement.scrollTop = topPos - 71; //navbar
+    },
     logout() {
       firebase
         .auth()
         .signOut()
         .then(() => {
           this.authUser = null;
+          this.$router.push("/login");
         });
     },
   },
-}
+};
 </script>
