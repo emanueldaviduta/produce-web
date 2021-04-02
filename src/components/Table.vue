@@ -1,151 +1,68 @@
 <template>
-  <table-lite
-    :has-checkbox="true"
-    :is-loading="table.isLoading"
-    :is-re-search="table.isReSearch"
-    :columns="table.columns"
-    :rows="table.rows"
-    :total="table.totalRecordCount"
-    :sortable="table.sortable"
-    :messages="table.messages"
-    @do-search="doSearch"
-    @is-finished="tableLoadingFinish"
-    @return-checked-rows="updateCheckedRows"
-  ></table-lite>
+	<DataTable :value="produces">
+		    <template #header>
+        		<div class="table-header">
+            		Produces
+            	<Button icon="pi pi-refresh" @click="refreshData()"></Button>
+        		</div>
+    		</template>
+    	<Column field="name" header="Name" sortable="true"></Column>
+    	<Column header="Category" sortable="true">
+		<template #body="produce">
+			{{produce.data.categoryId == 1 ? 'Vegetable' : 'Fruit'}}
+		</template>
+		</Column>
+    	<Column field="calories" header="Calories" sortable="true"></Column>
+    	<Column field="proteins" header="Proteins" sortable="true"></Column>
+    	<Column field="lipid" header="Lipid" sortable="true"></Column>
+    	<Column field="carbohydrat" header="Carbohydrat" sortable="true"></Column>
+    	<Column field="fiber" header="Fiber" sortable="true"></Column>
+	</DataTable>
 </template>
 
 <script>
-import { defineComponent, reactive } from "vue";
-import TableLite from "vue3-table-lite";
-const sampleData1 = (offst, limit) => {
-  offst = offst + 1;
-  let data = [];
-  for (let i = offst; i <= limit; i++) {
-    data.push({
-      id: i,
-      name: "TEST" + i,
-      email: "test" + i + "@example.com",
-    });
-  }
-  return data;
-};
-const sampleData2 = (offst, limit) => {
-  let data = [];
-  for (let i = limit; i > offst; i--) {
-    data.push({
-      id: i,
-      name: "TEST" + i,
-      email: "test" + i + "@example.com",
-    });
-  }
-  return data;
-};
-export default defineComponent({
-  name: "App",
-  components: {
-    TableLite,
-  },
-  setup() {
-    const table = reactive({
-      isLoading: false,
-      isReSearch: false,
-      columns: [
-        {
-          label: "ID",
-          field: "id",
-          width: "3%",
-          sortable: true,
-          isKey: true,
-        },
-        {
-          label: "Name",
-          field: "name",
-          width: "10%",
-          sortable: true,
-          display: function (row) {
-            return (
-              '<a href="#" data-id="' +
-              row.user_id +
-              '" class="name-btn">' +
-              row.name +
-              "</button>"
-            );
-          },
-        },
-        {
-          label: "Email",
-          field: "email",
-          width: "15%",
-          sortable: true,
-        },
-        {
-          label: "",
-          field: "quick",
-          width: "10%",
-          display: function (row) {
-            return (
-              '<button type="button" data-id="' +
-              row.user_id +
-              '" class="quick-btn">Button</button>'
-            );
-          },
-        },
-      ],
-      rows: sampleData1(0, 10),
-      totalRecordCount: 20,
-      sortable: {
-        order: "id",
-        sort: "asc",
-      },
-      messages: {
-        pagingInfo: "Showing {0}-{1} of {2}",
-        pageSizeChangeLabel: "Row count:",
-        gotoPageLabel: "Go to page:",
-        noDataAvailable: "No data",
-      },
-    });
-    const doSearch = (offset, limit, order, sort) => {
-      table.isLoading = true;
-      setTimeout(() => {
-        table.isReSearch = offset == undefined ? true : false;
-        if (offset >= 10 || limit >= 20) {
-          limit = 20;
-        }
-        if (sort == "asc") {
-          table.rows = sampleData1(offset, limit);
-        } else {
-          table.rows = sampleData2(offset, limit);
-        }
-        table.totalRecordCount = 20;
-        table.sortable.order = order;
-        table.sortable.sort = sort;
-      }, 600);
-    };
-    const tableLoadingFinish = (elements) => {
-      table.isLoading = false;
-      Array.prototype.forEach.call(elements, function (element) {
-        if (element.classList.contains("name-btn")) {
-          element.addEventListener("click", function () {
-            // console.log(this.dataset.id + " name-btn click!!");
+import { db } from "../main";
+export default {
+	data(){
+		return {
+			produces: null
+		}
+	},
+	mounted() {
+		db.collection("Produce")
+        .get()
+        .then((querySnapshot) => {
+          const arr = [];
+          querySnapshot.forEach((doc) => {
+            const obj = doc.data();
+            arr.push(obj);
           });
-        }
-        if (element.classList.contains("quick-btn")) {
-          element.addEventListener("click", function () {
-            // console.log(this.dataset.id + " quick-btn click!!");
-          });
-        }
-      });
-    };
-    const updateCheckedRows = (rowsKey) => {
-      // console.log(rowsKey);
-    };
-    return {
-      table,
-      doSearch,
-      tableLoadingFinish,
-      updateCheckedRows,
-    };
-  },
-});
+		  this.produces = arr;
+	});
+	},
+	methods: {
+		refreshData(){
+			db.collection("Produce").get().then((querySnapshot) => {
+          		const arr = [];
+          		querySnapshot.forEach((doc) => {
+            		const obj = doc.data();
+            		arr.push(obj);
+          		});
+		  		this.produces = arr;
+			});
+		}
+	}
+}
 </script>
+<style scoped>
+.table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
+.product-image {
+    width: 100px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23)
+}
+</style>
